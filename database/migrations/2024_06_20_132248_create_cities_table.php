@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cities', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('state_id')->constrained()->cascadeOnDelete();
+            $table->engine = 'InnoDB';
+            $table->increments('id')->index();
             $table->string('name');
-            $table->timestamps();
+            $table->foreignId('state_id')->constrained()->cascadeOnDelete();
         });
     }
 

@@ -26,7 +26,18 @@ class CountryResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                ->required()
+                ->maxLength(255),
+
+                Forms\Components\TextInput::make('code')
+                ->required()
+                ->maxLength(3),
+
+                Forms\Components\TextInput::make('phonecode')
+                ->required()
+                ->numeric()
+                ->maxLength(5),
             ]);
     }
 
@@ -34,7 +45,15 @@ class CountryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('code')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('phonecode')
+                ->numeric()
+                ->sortable(),
             ])
             ->filters([
                 //

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StateResource\Pages;
 use App\Filament\Resources\StateResource\RelationManagers;
+use App\Models\Country;
 use App\Models\State;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,12 +13,13 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
 
 class StateResource extends Resource
 {
     protected static ?string $model = State::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-flag'; // membuat icon menu
+    protected static ?string $navigationIcon = 'heroicon-o-building-library'; // membuat icon menu
     protected static ?string $navigationLabel = 'State'; // klo mau mengubah nama menu
     protected static ?string $modelLabel = 'States '; // klo mau mengubah nama lebel index
     protected static ?string $navigationGroup = 'System Management '; // klo mau membuat grup menu
@@ -26,9 +28,13 @@ class StateResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('country_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('country_id')
+                    ->relationship(name: 'country', titleAttribute:'name')
+                    ->searchable()
+                    // ->multiple()
+                    // ->native(false)
+                    ->preload()
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -39,11 +45,14 @@ class StateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('country_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('country.name')
+                    ->searchable(isIndividual: true, isGlobal: false)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                TextColumn::make('name')
+                    ->label('State Name')
+                    ->searchable(isIndividual: true)
+                    // ->hidden(auth()->user()->email === 'admin@gmail.com'),
+                    ->visible(auth()->user()->email === 'admin@gmail.com'), // untuk field yang boleh lihat,
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -52,11 +61,12 @@ class StateResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('country.name', 'desc')
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

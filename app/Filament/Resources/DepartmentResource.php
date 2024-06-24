@@ -17,11 +17,11 @@ class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-flag'; // membuat icon menu
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap'; // membuat icon menu
     protected static ?string $navigationLabel = 'Department'; // klo mau mengubah nama menu
     protected static ?string $modelLabel = ' Department '; // klo mau mengubah nama lebel index
     protected static ?string $navigationGroup = 'System Management '; // klo mau membuat grup menu
-    protected static ?int $navigationSort = 4; // membuat urutan menu
+    protected static ?int $navigationSort = 2; // membuat urutan menu
 
     public static function form(Form $form): Form
     {
@@ -39,6 +39,7 @@ class DepartmentResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('employees_count')->counts('employees'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
