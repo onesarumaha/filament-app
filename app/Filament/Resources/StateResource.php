@@ -2,12 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\CountryResource\RelationManagers\StatesRelationManager;
 use App\Filament\Resources\StateResource\Pages;
 use App\Filament\Resources\StateResource\RelationManagers;
+use App\Filament\Resources\StateResource\RelationManagers\CitiesRelationManager;
 use App\Models\Country;
 use App\Models\State;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -76,10 +81,24 @@ class StateResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('State Information')
+                    ->schema([
+                        TextEntry::make('country.name')->label('Name'),
+                        TextEntry::make('name')->label('State Name')
+                    ])->columns(2)
+
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [
-            //
+            StatesRelationManager::class,
+            CitiesRelationManager::class
         ];
     }
 
