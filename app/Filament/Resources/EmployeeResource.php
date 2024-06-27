@@ -25,7 +25,30 @@ class EmployeeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $navigationGroup = 'Employee Management '; // klo mau membuat grup menu
-    protected static ?int $navigationSort = 3; // membuat urutan menu
+
+    // protected static ?int $navigationSort = 3; // membuat urutan menu
+
+    protected static ?string $recordTitleAttribute = 'first_name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['first_name', 'last_name', 'middle_name'];
+    }
+
+    public static function getGloballySearchEloquentQuery(): Builder
+    {
+        return parent::getGloballySearchEloquentQuery()->with(['country']);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'info';
+    }
 
 
     public static function form(Form $form): Form
@@ -191,6 +214,8 @@ class EmployeeResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->successNotificationTitle('Employee deleted')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

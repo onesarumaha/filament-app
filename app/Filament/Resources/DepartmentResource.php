@@ -25,7 +25,22 @@ class DepartmentResource extends Resource
     protected static ?string $navigationLabel = 'Department'; // klo mau mengubah nama menu
     protected static ?string $modelLabel = ' Department '; // klo mau mengubah nama lebel index
     protected static ?string $navigationGroup = 'System Management '; // klo mau membuat grup menu
-    protected static ?int $navigationSort = 2; // membuat urutan menu
+    protected static ?int $navigationSort = 4; // membuat urutan 
+    
+    public static function getGloballySearchEloquentQuery(): Builder
+    {
+        return parent::getGloballySearchEloquentQuery()->with(['country']);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'info';
+    }
 
     public static function form(Form $form): Form
     {

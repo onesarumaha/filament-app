@@ -5,3 +5,4 @@ https://heroicons.com/
 1.41
 1.59
 2.25
+3.08

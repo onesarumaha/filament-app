@@ -21,7 +21,21 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'User Management '; // klo mau membuat grup menu
 
-    protected static ?int $navigationSort = 1; // membuat urutan menu
+
+    public static function getGloballySearchEloquentQuery(): Builder
+    {
+        return parent::getGloballySearchEloquentQuery()->with(['country']);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'info';
+    }
 
     public static function form(Form $form): Form
     {
